@@ -1,8 +1,8 @@
 import React, { createContext, useState } from 'react'
 
- export const RoleProvide = createContext()
+export const RoleProvide = createContext()
 function ContextRole({children}) {
- const [userRole,setUserRole]=useState("admin")
+ const [userRole,setUserRole]=useState("")
  const [logine,setLogine] =useState(false)
  const login=(role)=>{
      setUserRole(role)
@@ -12,7 +12,7 @@ function ContextRole({children}) {
  }
   return (
     <>
-<RoleProvide.Provider value={{userRole,login,logout,logine,setLogine}}>{children}</RoleProvide.Provider>
+<RoleProvide.Provider value={{userRole,login,logout,logine,setLogine,setUserRole}}>{children}</RoleProvide.Provider>
     </>
   )
 }

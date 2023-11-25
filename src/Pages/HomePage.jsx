@@ -9,9 +9,9 @@ function HomePage() {
   return (
     <>
     <>
-      {
-        userRole==="admin" || userRole==="host" ?<AdminHome/>:<UserHome/>
-      }
+    
+        <AdminHome/>
+      
      
     </>
     </>

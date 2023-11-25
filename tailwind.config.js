@@ -6,6 +6,9 @@ export default {
     extend: {
       colors:{
         "customPink":"#DE3163"
+      },
+      fontFamily:{
+        "customheading":'Noto Sans Japanese ,sans-serif'
       }
     },
   },
