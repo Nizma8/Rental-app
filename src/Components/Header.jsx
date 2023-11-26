@@ -17,7 +17,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import TextField from "@mui/material/TextField";
 import { pink, purple } from "@mui/material/colors";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { loginUserApi, registerUserAPi } from "../Service/commonApi";
+import { loginHostApi, loginUserApi, registerUserAPi } from "../Service/commonApi";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const color = pink[500];
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -86,7 +89,7 @@ function Header({ home }) {
     const {username,email,password}=userInput
     // api call to the /user/regoster
   if(!username || !email || !password ){
-    alert("please fill the form")
+    toast.warning("please fill the form")
   }else
   {  
     const response = await registerUserAPi(userInput)
@@ -117,10 +120,11 @@ const login = async()=>{
     const response = await loginUserApi({email,password})
     if(response.status ===200){
       console.log(response);
-      alert(response.data.message)
+      toast.success(response.data.message)
       sessionStorage.setItem("token",response.data.token)
       localStorage.setItem("ExistingUser",JSON.stringify(response.data.existingUser
         ))
+        localStorage.setItem("role",JSON.stringify(response.data.existingUser.role))
       setUserInput({
         username:"",
         email:"",
@@ -134,21 +138,41 @@ const login = async()=>{
       
     }
     else{
-      alert(response.response.data.message)
+      toast.warning(response.response.data.message)
     }
   }
 }
 //logout
-const Logout = (item)=>{
+const Logout = async(item)=>{
   if(item==="Logout"){
     setLogine(false)
+    setUserRole('user')
     localStorage.removeItem("ExistingUser")
     sessionStorage.removeItem("token")
     handleClose()
+    setMenu(!menu)
   }
+  else if(item==="login as a Host"){
+   const response = await loginHostApi({
+    "Authorization":`Bearer ${sessionStorage.getItem("token")}`
+   })
+
+   
+if(response.status===200||response.status===201){
+  toast.success(response.data.message)
+  localStorage.setItem("role",JSON.stringify(response.data.role))
+  setUserRole(JSON.parse(localStorage.getItem("role")))
+  item.replace("login as a Host","")
+  setMenu(!menu)
 }
+}else{
+    toast.warning("please try after sometime..!")
+   }
+  }
+  
+
 useEffect(() => {
-  if (localStorage.getItem("ExistingUser")) {
+  if (localStorage.getItem("ExistingUser")&&sessionStorage.getItem("token")) {
     setUsername(JSON.parse(localStorage.getItem("ExistingUser")).username);
     setLogine(true)
   }
@@ -173,7 +197,7 @@ useEffect(() => {
                 onClick={handleMenu}
               />
               <span className="border bg-black rounded-full text-white w-8 h-8 flex flex-col items-center justify-center">
-               {username.slice(0,1)}
+               {logine && username.slice(0,1)}
               </span>
             </div>
           </div>
@@ -195,6 +219,9 @@ useEffect(() => {
                   })
                 : [`Welcome ${username}`,"Wishlist", "Booking", "Account","login as a Host", "Logout"].map(
                     (item, index) => {
+                      if(item==="login as a Host" && userRole=="host"){
+                        return null
+                      }
                       return (
                        <>
                           <li
@@ -324,6 +351,17 @@ useEffect(() => {
           </BootstrapDialog>
         </ThemeProvider>
       </>
+      <ToastContainer
+position="bottom-right"
+autoClose={5000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="light"/>
     </>
   );
 }

@@ -2,7 +2,7 @@ import React, { createContext, useState } from 'react'
 
 export const RoleProvide = createContext()
 function ContextRole({children}) {
- const [userRole,setUserRole]=useState("")
+ const [userRole,setUserRole]=useState(JSON.parse(localStorage.getItem("role")))
  const [logine,setLogine] =useState(false)
  const login=(role)=>{
      setUserRole(role)
