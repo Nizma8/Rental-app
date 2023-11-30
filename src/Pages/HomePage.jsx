@@ -8,12 +8,12 @@ function HomePage() {
 
   return (
     <>
-    <>
     
-        <AdminHome/>
-      
+    
+    {userRole==="admin"?<AdminHome/>:<UserHome/>
+      }
      
-    </>
+    
     </>
   )
 }

@@ -1,10 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SiGooglehome } from "react-icons/si";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { IoIosLogOut } from "react-icons/io";
-import { FaRegUserCircle } from "react-icons/fa";
-import { FaHeart } from "react-icons/fa";
-import { MdWorkHistory } from "react-icons/md";
+
 import { RoleProvide } from "../ContextShare/ContextRole";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -20,6 +17,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { loginHostApi, loginUserApi, registerUserAPi } from "../Service/commonApi";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 
 
 const color = pink[500];
@@ -49,6 +47,7 @@ function Header({ home }) {
     email:"",
     password:""
   })
+const navigate = useNavigate()
 
   const handleMenu = () => {
     setMenu(!menu);
@@ -69,10 +68,9 @@ function Header({ home }) {
       })
     } else if (item === "sign-up") {
       setRegister(true);
-      
-
       setOpen(true);
     }
+    
   };
 
   const handleRedie = () => {
@@ -119,8 +117,7 @@ const login = async()=>{
   }else{
     const response = await loginUserApi({email,password})
     if(response.status ===200){
-      console.log(response);
-      toast.success(response.data.message)
+      toast.success(`Welcome ${response.data.existingUser.username}`)
       sessionStorage.setItem("token",response.data.token)
       localStorage.setItem("ExistingUser",JSON.stringify(response.data.existingUser
         ))
@@ -143,33 +140,38 @@ const login = async()=>{
   }
 }
 //logout
-const Logout = async(item)=>{
-  if(item==="Logout"){
-    setLogine(false)
-    setUserRole('user')
-    localStorage.removeItem("ExistingUser")
-    sessionStorage.removeItem("token")
-    handleClose()
-    setMenu(!menu)
-  }
-  else if(item==="login as a Host"){
-   const response = await loginHostApi({
-    "Authorization":`Bearer ${sessionStorage.getItem("token")}`
-   })
+const Logout = async (item) => {
+  if (item === "Logout") {
+    setLogine(false);
+    setUserRole('user');
+    localStorage.removeItem("ExistingUser");
+    sessionStorage.removeItem("token");
+    handleClose();
+    setMenu(!menu);
+    navigate('/')
+  } else if (item === "login as a Host") {
+    const response = await loginHostApi({
+      "Authorization": `Bearer ${sessionStorage.getItem("token")}`
+    });
 
-   
-if(response.status===200||response.status===201){
-  toast.success(response.data.message)
-  localStorage.setItem("role",JSON.stringify(response.data.role))
-  setUserRole(JSON.parse(localStorage.getItem("role")))
-  item.replace("login as a Host","")
-  setMenu(!menu)
-}
-}else{
-    toast.warning("please try after sometime..!")
-   }
-  }
-  
+    if (response.status === 200 || response.status === 201) {
+      toast.success(response.data.message);
+      localStorage.setItem("role", JSON.stringify(response.data.role));
+      setUserRole(JSON.parse(localStorage.getItem("role")));
+      item.replace("login as a Host", "");
+      setMenu(!menu);
+    }
+
+    else {
+      toast.warning("please try after sometime..!");
+    }
+  } else if (item === "Wishlist") {
+    console.log(item);
+    navigate('/property/wishlist');
+    setMenu(!menu)
+  } 
+};
+
 
 useEffect(() => {
   if (localStorage.getItem("ExistingUser")&&sessionStorage.getItem("token")) {
