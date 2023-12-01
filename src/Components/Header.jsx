@@ -170,8 +170,11 @@ const Logout = async (item) => {
     navigate('/property/wishlist');
     setMenu(!menu)
   } 
+  else if(item === "Account"){
+    navigate('/account')
+    setMenu(!menu)
+  }
 };
-
 
 useEffect(() => {
   if (localStorage.getItem("ExistingUser")&&sessionStorage.getItem("token")) {
@@ -219,11 +222,12 @@ useEffect(() => {
                       </li>
                     );
                   })
-                : [`Welcome ${username}`,"Wishlist", "Booking", "Account","login as a Host", "Logout"].map(
+                : [`Welcome ${username}`,`${userRole=="host"||userRole=="user"?'Wishlist':""}`,`${userRole=="host"||userRole=="user"?'Booking':''}`, "Account","login as a Host", "Logout"].filter(item=>item!=="").map(
                     (item, index) => {
                       if(item==="login as a Host" && userRole=="host"){
                         return null
-                      }
+                      } 
+                      
                       return (
                        <>
                           <li
@@ -354,7 +358,7 @@ useEffect(() => {
         </ThemeProvider>
       </>
       <ToastContainer
-position="bottom-right"
+        position="bottom-right"
 autoClose={5000}
 hideProgressBar={false}
 newestOnTop={false}

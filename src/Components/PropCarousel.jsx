@@ -6,7 +6,11 @@ import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import { GetHomeContext } from '../ContextShare/ContextRole';
 function PropCarousel({item}) {
- const {setSelectedTab}=useContext(GetHomeContext)
+ const {setSelectedTab,selectedTab}=useContext(GetHomeContext)
+const handleSelectType = (item)=>{
+setSelectedTab((prevSelectedTab)=>(prevSelectedTab===item?null:item))
+
+}
  const logoImage = [
  { items:"Beach",
  logo:"https://a0.muscache.com/pictures/10ce1091-c854-40f3-a2fb-defc2995bcaf.jpg"
@@ -29,10 +33,11 @@ function PropCarousel({item}) {
   return (
     <>
       
-       { filterdItemAndLogo && 
+       { 
+       filterdItemAndLogo && 
         <Card sx={{  maxWidth: 100, maxHeight:90 , width:80,paddingBottom:"10px",
-        borderBottom: '4px solid #DE3163'
-        }} onClick={()=>{setSelectedTab(item)}}>
+        borderBottom: `${selectedTab && selectedTab === item?'4px solid #DE3163':'none'}`
+        }} onClick={()=>{handleSelectType(item)}}>
       <CardActionArea >
         <CardMedia sx={{width:'40px',marginLeft:"25px",}}
           component="img"

@@ -31,13 +31,13 @@ function WishList() {
     };
 
     try {
-      // Remove the item locally
-      
-      // Send the request to the server to remove the item
-      await removeWishlistApi(id, reqHeader);
+      // console.log("Before deletion:", wishListData);
+    // Send the request to the server to remove the item
+    await removeWishlistApi(id, reqHeader);
 
-      // Fetch the updated wishlist
-      await wishlistUsers();
+    // Fetch the updated wishlist
+    await wishlistUsers();
+    // console.log("After deletion:", wishListData);
     } catch (error) {
       console.error("Error deleting wishlist item:", error);
     }
@@ -51,7 +51,7 @@ function WishList() {
   // console.log(wishListData);
   return (
     <div className="pt-28 grid xl:grid-cols-4 gap-2  md:grid-cols-3 md:gap-2   sm:grid-cols-2 mx-10 sm:mx-20">
-      {wishListData.length > 0
+      {wishListData?.length > 0
         ? wishListData?.map((item) => {
             return (
               <Card sx={{ maxWidth: 300 }} key={item._id}>

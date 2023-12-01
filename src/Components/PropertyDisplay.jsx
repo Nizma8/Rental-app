@@ -14,13 +14,15 @@ import "react-toastify/dist/ReactToastify.css";
 function PropertyDisplay() {
   // to get all property
   const { userRole } = useContext(RoleProvide);
-  const { getAllHomes, homeData } = useContext(GetHomeContext);
+  const { getAllHomes, homeData,selectedTab } = useContext(GetHomeContext);
   // const filteredData = homeData.filter(item=>item.chooseType.includes(selectedTab))
   // console.log(filteredData)
   const navigate = useNavigate();
   const handleNavigate = (id) => {
     navigate(`/property/${id}`);
   };
+  const filteresList = homeData.filter(item=>item.chooseType===selectedTab)
+  // console.log(filteresList);
   const handleWishlist = async (productId)=>{
     const reqBody = { productId };
     const reqHeader = {
@@ -51,7 +53,7 @@ function PropertyDisplay() {
 
   return (
     <div className="grid xl:grid-cols-4 xl:ml-12 gap-10 mt-28 ml-32 lg:grid-cols-3 md:grid-cols-2 mb-7">
-      {homeData?.map((item, index) => {
+      {(selectedTab ? filteresList : homeData)?.map((item, index) => {
         return (
           <>
             <Card sx={{ maxWidth: 300, position: "relative" }} key={index}>

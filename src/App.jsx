@@ -6,6 +6,7 @@ import { Dashboard } from "@mui/icons-material"
 import Header from "./Components/Header"
 import ViewComponent from "./Components/ViewComponent"
 import WishList from "./Pages/WishList"
+import Account from "./Pages/Account"
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
 <Route path="/property/:id" element={<ViewComponent/>}/>
 <Route path="/checkout" element={<CheckoutPage/>}/>
 <Route path="/property/wishlist" element={<WishList/>}/>
+<Route path="/account" element={<Account/>}/>
 </Routes>
     </>
   )
