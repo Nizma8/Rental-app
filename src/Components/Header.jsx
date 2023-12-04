@@ -17,7 +17,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { loginHostApi, loginUserApi, registerUserAPi } from "../Service/commonApi";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 
 
 const color = pink[500];
@@ -48,7 +48,9 @@ function Header({ home }) {
     password:""
   })
 const navigate = useNavigate()
-
+const handleRedirect =()=>{
+  navigate('/')
+}
   const handleMenu = () => {
     setMenu(!menu);
   };
@@ -119,16 +121,18 @@ const login = async()=>{
     if(response.status ===200){
       toast.success(`Welcome ${response.data.existingUser.username}`)
       sessionStorage.setItem("token",response.data.token)
-      localStorage.setItem("ExistingUser",JSON.stringify(response.data.existingUser
-        ))
-        localStorage.setItem("role",JSON.stringify(response.data.existingUser.role))
+      localStorage.setItem("ExistingUser",JSON.stringify(response.data.existingUser))
+        // localStorage.setItem("role",JSON.stringify(response.data.existingUser.role))
+        const roles = response.data.existingUser.role;
+        const updatedUserRole = roles.includes("admin") ? "admin" : roles.includes("host") ?"host" :roles.includes("user")?"user":"user";
+  
+        localStorage.setItem("role", JSON.stringify(roles));
       setUserInput({
         username:"",
         email:"",
         password:""
       })
-      
-      setUserRole(response.data.existingUser.role)
+      setUserRole(updatedUserRole);
       handleClose()
       handleMenu()
       setLogine(true)
@@ -139,6 +143,7 @@ const login = async()=>{
     }
   }
 }
+// console.log(userRole.length);
 //logout
 const Logout = async (item) => {
   if (item === "Logout") {
@@ -156,8 +161,15 @@ const Logout = async (item) => {
 
     if (response.status === 200 || response.status === 201) {
       toast.success(response.data.message);
-      localStorage.setItem("role", JSON.stringify(response.data.role));
-      setUserRole(JSON.parse(localStorage.getItem("role")));
+      const roles = response.data.role
+      localStorage.setItem("role", JSON.stringify(response.data.role))
+      ;
+      const updatedUserRole = roles.includes("host") ? "host" :  "user";
+
+     localStorage.setItem("id", JSON.stringify(response.data._id))
+      setUserRole(updatedUserRole );
+      // console.log(role);
+      
       item.replace("login as a Host", "");
       setMenu(!menu);
     }
@@ -166,7 +178,6 @@ const Logout = async (item) => {
       toast.warning("please try after sometime..!");
     }
   } else if (item === "Wishlist") {
-    console.log(item);
     navigate('/property/wishlist');
     setMenu(!menu)
   } 
@@ -189,7 +200,7 @@ useEffect(() => {
         <div className="grid grid-cols-3 mx-12 h-full lg:gap-8   ">
           <div className="inline-flex">
             <SiGooglehome className="text-4xl me-4 text-customPink" />
-            <h4 className="text-4xl font-extralight  text-customPink">
+            <h4 className="text-4xl font-extralight  text-customPink" onClick={handleRedirect}>
               STAYSCAPE
             </h4>
           </div>
@@ -222,7 +233,7 @@ useEffect(() => {
                       </li>
                     );
                   })
-                : [`Welcome ${username}`,`${userRole=="host"||userRole=="user"?'Wishlist':""}`,`${userRole=="host"||userRole=="user"?'Booking':''}`, "Account","login as a Host", "Logout"].filter(item=>item!=="").map(
+                : [`Welcome ${username}`,`${userRole=="host"||userRole=="user"?'Wishlist':""}`, `${userRole=="host"||userRole=="user"?"login as a Host":""}`, "Account","Logout"].filter(item=>item!=="").map(
                     (item, index) => {
                       if(item==="login as a Host" && userRole=="host"){
                         return null

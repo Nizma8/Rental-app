@@ -17,7 +17,7 @@ import Box from "@mui/material/Box";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 function CheckoutPage() {
-  const { checkUser, setCheckUser } = useContext(GetHomeContext);
+  const { checkUser, setCheckUser,setPrice } = useContext(GetHomeContext);
   const [checkOutDetails, setCheckOutDetails] = useState([]);
   const [nightsStayed, setNightsStayed] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -107,6 +107,7 @@ function CheckoutPage() {
     console.log(response);
     // If booking is successful, setBookingSuccess(true);
   };
+  
   // to get no of night spend
   const getNightsStayed = () => {
     const checkIn = new Date(checkOutDetails.checkIn);
@@ -130,39 +131,38 @@ function CheckoutPage() {
       const response = await getChecksApi(reqHeader);
       if (response.status === 200) {
         const dataArray = Object.values(response);
-        setCheckOutDetails(
-          dataArray[0].populatedlist[dataArray[0].populatedlist.length - 1]
+        const latestCheckOutDetails =
+          dataArray[0].populatedlist[dataArray[0].populatedlist.length - 1];
+
+        // Calculate nights stayed
+        const checkIn = new Date(latestCheckOutDetails.checkIn);
+        const checkOut = new Date(latestCheckOutDetails.checkOut);
+        const timeDifference = checkOut.getTime() - checkIn.getTime();
+        const nightsStayedValue = Math.ceil(
+          timeDifference / (1000 * 3600 * 24)
         );
+
+        setCheckOutDetails(latestCheckOutDetails);
         setCheckUser({
-          checkinDate: new Date(
-            dataArray[0].populatedlist[
-              dataArray[0].populatedlist.length - 1
-            ].checkIn
-          )
+          checkinDate: new Date(latestCheckOutDetails.checkIn)
             .toISOString()
             .split("T")[0],
-          checkoutDate: new Date(
-            dataArray[0].populatedlist[
-              dataArray[0].populatedlist.length - 1
-            ].checkOut
-          )
+          checkoutDate: new Date(latestCheckOutDetails.checkOut)
             .toISOString()
             .split("T")[0],
-          guests:
-            dataArray[0].populatedlist[dataArray[0].populatedlist.length - 1]
-              .guests,
+          guests: latestCheckOutDetails.guests,
         });
+
+        setNightsStayed(nightsStayedValue);
+
+        const totalPrice =
+          nightsStayedValue *
+          Number(checkUser.guests) *
+          latestCheckOutDetails.productId.price;
+
+        setTotalPrice(totalPrice);
+        setPrice(totalPrice);
       }
-      const nightsStayedValue = getNightsStayed(
-        checkOutDetails?.checkIn,
-        checkOutDetails?.checkOut
-      );
-      setNightsStayed(nightsStayedValue);
-      const totalPrice =
-        nightsStayed *
-        Number(checkUser.guests) *
-        checkOutDetails?.productId?.price;
-      setTotalPrice(totalPrice);
     } catch (error) {
       console.error("Error fetching user checks:", error);
     }
@@ -170,7 +170,7 @@ function CheckoutPage() {
 
   useEffect(() => {
     getuserCheckOut();
-  }, [nightsStayed]);
+  }, []); 
   return (
     <div className="container mx-5 px-5 pt-28">
       <div className="container mx-auto my-8">

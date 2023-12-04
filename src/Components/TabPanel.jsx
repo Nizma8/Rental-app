@@ -9,7 +9,7 @@ import { GetHomeContext } from '../ContextShare/ContextRole';
 
 function TabPanel() {
   const {homeData}= useContext(GetHomeContext)
-  const filteredData = homeData.map(item=>item.chooseType).filter((data,index,array)=>array.indexOf(data)==index)
+  const filteredData = homeData?.map(item=>item.chooseType).filter((data,index,array)=>array.indexOf(data)==index)
 
  
           

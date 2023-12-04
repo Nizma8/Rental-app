@@ -6,11 +6,20 @@ import { base_url } from "./baseUrl"
  export const registerUserAPi =async(user)=>{
     return await commonApi("POST",`${base_url}/user/register`,user,"")
  }
+ // get all users
+ export const getAllusersApi = async(header)=>{
+  return await commonApi("GET",`${base_url}/user/register`,"",header)
+ }
 
  /// login
 
  export const loginUserApi = async(user)=>{
    return await commonApi("POST",`${base_url}/user/login`,user,"")
+ }
+ //edit user
+
+ export const editUserApi = async(body,header)=>{
+  return await commonApi("PUT",`${base_url}/user/edit`,body,header)
  }
 
  // login as a host
@@ -18,7 +27,10 @@ import { base_url } from "./baseUrl"
  export const loginHostApi = async(header)=>{
   return await commonApi("POST",`${base_url}/host/login`,"",header)
  }
-
+//post all products
+export const addAllProductsApi =async(body,header)=>{
+  return await commonApi("POST",`${base_url}/host/addProperty`,body,header)
+}
  // get all products
 
  export const getHomeApi = async()=>{
@@ -74,4 +86,20 @@ export const editguestApi = async(body)=>{
 
 export const removeHomeApi = async(id,header)=>{
   return await commonApi("DELETE",`${base_url}/product/${id}`,{},header)
+}
+
+// to get user booked homes
+export const getUserBookedHomesAPi = async(header)=>{
+  return await commonApi ("GET",`${base_url}/products/check`,"",header)
+}
+
+// to get user hosted Homes
+export const getUserHostedHomesApi = async(header)=>{
+  return await commonApi('GET',`${base_url}/homes/host`,"",header)
+}
+
+// to get details of hosts 
+
+export const getHostFromProductsApi = async(id)=>{
+  return await commonApi('GET',`${base_url}/product/host/${id}`,"")
 }

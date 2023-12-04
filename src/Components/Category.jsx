@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import TabPanel from "./TabPanel";
 import Button from "@mui/material/Button";
@@ -18,8 +18,10 @@ import Select from "@mui/material/Select";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import ListItemText from "@mui/material/ListItemText";
 import { TextField } from "@mui/material";
-import { RoleProvide } from "../ContextShare/ContextRole";
-
+import { GetHomeContext, RoleProvide } from "../ContextShare/ContextRole";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; 
+import { addAllProductsApi } from "../Service/commonApi";
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
@@ -39,8 +41,10 @@ const MenuProps = {
   },
 };
 const names = ["Wifi", "Tv", "Heater", "Air Condition", "Pool"];
+
 function Category() {
   const { userRole } = useContext(RoleProvide);
+  const {setHomeData,homeData}= useContext(GetHomeContext)
   const [open, setOpen] = React.useState(false);
   const [propertyDetails, setPropertyDetails] = useState({
     image: '',
@@ -51,14 +55,58 @@ function Category() {
     bedCount: '',
     price: '',
   });
+  const [preview,setPreview] =useState("")
+  useEffect(()=>{
+    if(localStorage.getItem("id") && sessionStorage.getItem("token")){
+      setPropertyDetails({...propertyDetails,userId:JSON.parse(localStorage.getItem("id"))})
+   
+    }
+  },[])
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
-  const [personName, setPersonName] = React.useState([]);
+const handleAdd =async()=>{
+  const {image,chooseType,amenities,name,location,bedCount,price} =propertyDetails
+  if(!image||!chooseType||!amenities||!name||!location||!bedCount||!price ){
+    toast.error("Please fill the form")
+  }else{
+    const reqBody = new FormData()
+    reqBody.append("productImage",image)
+    reqBody.append("chooseType",chooseType)
+    reqBody.append("amenities",amenities)
+    reqBody.append("name",name)
+    reqBody.append("location",location)
+    reqBody.append("bedCount",bedCount)
+    reqBody.append("price",price)
+   
+    const reqHeader ={
+      "content-type":"multipart/form-data",
+      "Authorization":`Bearer ${sessionStorage.getItem("token")}`
+    }
 
+    const response = await addAllProductsApi(reqBody,reqHeader)
+    if(response.status===200){
+      setPropertyDetails({
+        image: '',
+        chooseType: '',
+        amenities: [],
+        name: '',
+        location: '',
+        bedCount: '',
+        price: '',
+      })
+      handleClose()
+      setHomeData([...homeData,response.data])
+      toast.success(response.data.message)
+
+    } else if(response.status===406){
+      toast.warning("This home already existed..")
+    }
+  }
+}
   const handleChange = (event) => {
     const {
       target: { value },
@@ -87,7 +135,7 @@ function Category() {
             onClick={handleClickOpen}
           >
             <AddCircleOutlineIcon className="text-white " />{" "}
-            <span className="text-white">Add Property</span>
+            <span className="text-white" >Add Property</span>
           </button>
         )}
       </div>
@@ -119,9 +167,18 @@ function Category() {
           </IconButton>
           <DialogContent dividers sx={{ overflowX: "hidden" }}>
             <label className="text-center" htmlFor="projectpic">
-              <input id="projectpic" type="file" style={{ display: "none" }} />
+              <input id="projectpic" type="file" style={{ display: "none" }} 
+                onChange={(e)=>{
+            const selectedFile = e.target.files[0]
+            setPropertyDetails({
+              ...propertyDetails,
+              image: selectedFile,
+            })
+            setPreview(URL.createObjectURL(selectedFile))}
+          }
+              />
               <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi2_0STiAZyZmqwMSyxAGQji_kToI47_EVjg&usqp=CAU"
+                src={preview?preview:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi2_0STiAZyZmqwMSyxAGQji_kToI47_EVjg&usqp=CAU"}
                 alt=""
                 height={"100px"}
               />
@@ -136,11 +193,11 @@ function Category() {
                 <MenuItem >
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value={1}>Beach</MenuItem>
-                <MenuItem value={2}>Luxe</MenuItem>
-                <MenuItem value={3}>Barn</MenuItem>
-                <MenuItem value={3}>Barn</MenuItem>
-                <MenuItem value={4}>Lakefront</MenuItem>
+                <MenuItem value="Beach">Beach</MenuItem>
+                <MenuItem value="Luxe">Luxe</MenuItem>
+                <MenuItem value="Farm">Farm</MenuItem>
+                <MenuItem value="Barn">Barn</MenuItem>
+                <MenuItem value="Lake">Lakefront</MenuItem>
               </Select>
             </FormControl>
             {/* Amenties */}
@@ -168,12 +225,6 @@ function Category() {
             </FormControl>
             {/* type image */}
              
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi2_0STiAZyZmqwMSyxAGQji_kToI47_EVjg&usqp=CAU"
-                alt=""
-                className="ml-2"
-                height={"70px"} width={"70px"}
-              />
             {/* property name */}
 
             <TextField
@@ -246,7 +297,7 @@ function Category() {
             />
           </DialogContent>
           <DialogActions>
-            <Button autoFocus onClick={handleClose}>
+            <Button autoFocus onClick={handleAdd}>
               Save changes
             </Button>
             <Button autoFocus onClick={handleClose}>
@@ -255,6 +306,17 @@ function Category() {
           </DialogActions>
         </BootstrapDialog>
       </ThemeProvider>
+      <ToastContainer
+        position="bottom-right"
+autoClose={5000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="light"/>
     </>
   );
 }

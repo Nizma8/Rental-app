@@ -21,20 +21,25 @@ function PropertyDisplay() {
   const handleNavigate = (id) => {
     navigate(`/property/${id}`);
   };
-  const filteresList = homeData.filter(item=>item.chooseType===selectedTab)
+  const filteresList = homeData?.filter(item=>item.chooseType===selectedTab)
   // console.log(filteresList);
   const handleWishlist = async (productId)=>{
-    const reqBody = { productId };
-    const reqHeader = {
-      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-    };
-    const response = await wishListAddApi(reqBody, reqHeader);
-    if (response.status === 200) {
-      toast.success(response.data.message);
-      console.log(response);
-    } else {
-      toast.warning(response.response.data.message);
+    if(sessionStorage.getItem("token")){
+      const reqBody = { productId };
+      const reqHeader = {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      };
+      const response = await wishListAddApi(reqBody, reqHeader);
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        // console.log(response);
+      } else {
+        toast.warning(response.response.data.message);
+      }
     }
+   else{
+    toast.error("please login!!")
+   }
   };
 
   const handleDeleteHome = async(id)=>{
@@ -59,7 +64,7 @@ function PropertyDisplay() {
             <Card sx={{ maxWidth: 300, position: "relative" }} key={index}>
               <CardActionArea>
                 <CardMedia
-                  sx={{ maxHeight: "250px" }}
+                  sx={{ maxHeight: "250px",height:"240px" }}
                   component="img"
                   image={`${base_url}/uploads/${item.productImage}`}
                 />

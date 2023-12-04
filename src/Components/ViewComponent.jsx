@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams,useNavigate } from "react-router-dom";
-import { checkDetailsApi, viewProductApi } from "../Service/commonApi";
+import { checkDetailsApi, getHostFromProductsApi, viewProductApi } from "../Service/commonApi";
 import { base_url } from "../Service/baseUrl";
 import { GetHomeContext, RoleProvide } from "../ContextShare/ContextRole";
 import { ToastContainer, toast } from 'react-toastify';
@@ -9,7 +9,7 @@ function ViewComponent() {
     const[view,setview]=useState({})
   const {setCheckUser,checkUser} = useContext(GetHomeContext)
   const {logine}= useContext(RoleProvide)
-  
+  const [hostsView,setHostsView] = useState({}) 
   const params = useParams();
 const navigate = useNavigate()
 
@@ -30,7 +30,6 @@ const detailsChecks = async()=>{
     const response =await checkDetailsApi(reqBody,reqHeader)
     if(response.status===200){
       navigate('/checkout')
-      console.log(response);
      setCheckUser({
       checkinDate:"",
      checkoutDate:"",
@@ -38,7 +37,6 @@ const detailsChecks = async()=>{
      })
      
     }
-    console.log(response);
    }
   
 }
@@ -50,10 +48,21 @@ const homeView =async()=>{
     setview(response.data)
     
   }
-
+  const hostView = async()=>{
+    const resposne = await getHostFromProductsApi(view?._id)
+    setHostsView(resposne.data);
+  }
   useEffect(() => {
     homeView()
-  }, []);
+  }, [hostsView]);
+  useEffect(() => {
+    // Await hostView before logging
+    const fetchData = async () => {
+      await hostView();
+      console.log(hostsView);
+    };
+    fetchData();
+  }, [view]);
   return (
     <>
       <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 bg-white rounded-xl overflow-hidden pt-28 shadow-md">
@@ -121,13 +130,13 @@ const homeView =async()=>{
               Checkout
             </button>
           </div>
-          <div className="mt-8 w-100 border py-2 px-2 shadow-lg rounded flex ">
+         {hostsView?.userId &&( <div className="mt-8 w-100 border py-2 px-2 shadow-lg rounded flex ">
           
-                <img src="https://as1.ftcdn.net/v2/jpg/06/56/50/82/1000_F_656508260_l1UtvG9rKQYp2QM0wXD1pRv8Tqu1peB6.jpg" alt="" width={"50px"} height={"50px"} className=" rounded-full"/>
-            <h3 className="text-xl font-semibold mt-4 ">Hosted by saliha,India</h3>
-           
+               <img src={hostsView?.userId?.image?`${base_url}/uploads/${hostsView?.userId.image}`:"https://as1.ftcdn.net/v2/jpg/06/56/50/82/1000_F_656508260_l1UtvG9rKQYp2QM0wXD1pRv8Tqu1peB6.jpg"} alt="" width={"50px"} height={"50px"} className=" rounded-full me-2"/>
+            <h3 className="text-xl font-semibold mt-4 ">Hosted by {hostsView?.userId?.username} </h3>
+          
        
-      </div>
+      </div>)}
 
         </div>
 
