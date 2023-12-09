@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Card, CardContent, Grid, Typography } from "@mui/material";
 import { ArrowForwardTwoTone } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+
 import {
   editCheckinApi,
   editCheckoutApi,
@@ -9,16 +10,19 @@ import {
   getChecksApi,
   requestBookingApi,
 } from "../Service/commonApi";
-import { GetHomeContext } from "../ContextShare/ContextRole";
+import { GetHomeContext,  } from "../ContextShare/ContextRole";
 import { base_url } from "../Service/baseUrl";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { PayPalButtons } from "@paypal/react-paypal-js";
+import PayPalPayemnt from "../Components/PayPalPayemnt";
 
 function CheckoutPage() {
   const { checkUser, setCheckUser,setPrice } = useContext(GetHomeContext);
   const [checkOutDetails, setCheckOutDetails] = useState([]);
+  const [showButton,SetShowButton] = useState(false)
   const [nightsStayed, setNightsStayed] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [open, setOpen] = useState(false);
@@ -92,9 +96,13 @@ function CheckoutPage() {
     navigate("/");
   };
   const handleBookingRequest = async () => {
+    console.log("button clicked");
+    SetShowButton(true)
+
     const reqBody = {
       id: checkOutDetails._id,
     };
+
     const response = await requestBookingApi(reqBody);
     if (response.status === 200) {
       setCheckUser({
@@ -103,7 +111,7 @@ function CheckoutPage() {
         guests: 1,
       });
     }
-    handleOpen();
+    // handleOpen();
     console.log(response);
     // If booking is successful, setBookingSuccess(true);
   };
@@ -250,12 +258,15 @@ function CheckoutPage() {
               </button>
             </div>
 
-            <button
-              className="bg-customPink text-white py-2 px-2 rounded-md shadow-lg ml-4 mt-5 "
+           <button
+              className="bg-customPink text-white py-2 px-2 rounded-md shadow-lg ml-4 mt-5 mb-6 "
               onClick={handleBookingRequest}
             >
               Request To Book
             </button>
+          {
+            showButton && <PayPalPayemnt name={checkOutDetails?.productId?.name} price ={totalPrice}/>
+          }
           </div>
 
           {/* Column 2: Summary Card */}

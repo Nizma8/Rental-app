@@ -1,6 +1,5 @@
 import React, { createContext, useState } from 'react'
 import { getHomeApi, getWishlistApi } from '../Service/commonApi'
-import { RollerShadesClosed } from '@mui/icons-material';
 
 export const RoleProvide = createContext()
 export const GetHomeContext = createContext()
@@ -22,7 +21,6 @@ function ContextRole({children}) {
 });
 const [price,setPrice] =useState(0)
 
-
  const getAllHomes = async () => {
   try {
     const response = await getHomeApi();
@@ -34,8 +32,10 @@ const [price,setPrice] =useState(0)
 
   return (
     <>
-<RoleProvide.Provider value={{userRole,logine,setLogine,setUserRole}}>
-  <GetHomeContext.Provider value={{getAllHomes,homeData,selectedTab,setSelectedTab,setHomeData,setWishListData,wishListData,checkUser,setCheckUser,price,setPrice}}>{children}</GetHomeContext.Provider></RoleProvide.Provider>
+
+  <RoleProvide.Provider value={{userRole,logine,setLogine,setUserRole}}>
+   <GetHomeContext.Provider value={{getAllHomes,homeData,selectedTab,setSelectedTab,setHomeData,setWishListData,wishListData,checkUser,setCheckUser,price,setPrice}}>{children}</GetHomeContext.Provider>
+    </RoleProvide.Provider>
     </>
   )
 }

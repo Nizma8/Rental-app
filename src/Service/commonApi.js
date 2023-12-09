@@ -103,3 +103,8 @@ export const getUserHostedHomesApi = async(header)=>{
 export const getHostFromProductsApi = async(id)=>{
   return await commonApi('GET',`${base_url}/product/host/${id}`,"")
 }
+
+// to edit details of homes
+export const editHomesApi = async(body,header)=>{
+  return await commonApi("PUT",`${base_url}/product/edit`,body,header)
+}
