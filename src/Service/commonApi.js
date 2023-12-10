@@ -108,3 +108,13 @@ export const getHostFromProductsApi = async(id)=>{
 export const editHomesApi = async(body,header)=>{
   return await commonApi("PUT",`${base_url}/product/edit`,body,header)
 }
+// to give reviews
+export const reviewHomes = async(body,header)=>{
+  return await commonApi("POST",`${base_url}/user/review`,body,header)
+}
+
+// to get reviews
+export const getReviewsApi = async (header)=>{
+  return await commonApi("GET",`${base_url}/user/review`,"",header)
+}
+

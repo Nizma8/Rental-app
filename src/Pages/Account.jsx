@@ -10,9 +10,10 @@ import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
 import ProfileComponent from '../Components/ProfileComponent';
 import SecurityComponent from '../Components/SecurityComponent';
 import Tabl from '../Components/Tabl';
-import { HomeMaxOutlined, HomeMiniRounded, LoginRounded } from '@mui/icons-material';
+import { HomeMaxOutlined, HomeMiniRounded, LoginRounded, ReviewsOutlined } from '@mui/icons-material';
 import HostDetails from '../Components/HostDetails';
 import List from '../Components/List';
+import ReviewTabl from '../Components/ReviewTabl';
 function Account() {
   const [expandedPanel, setExpandedPanel] = useState(null);
    const {userRole} = useContext(RoleProvide)
@@ -45,6 +46,7 @@ function Account() {
           Content: <List/>,
           logo: <ManageHistoryIcon />,
         },
+        
       
       ];
     } else if ( userRole=="user" || userRole =="host") {
@@ -77,6 +79,14 @@ function Account() {
           Content: <HostDetails/>,
           logo: <HomeMaxOutlined/>,
         },
+        {
+          id:5,
+          title:"Your Review",
+          decription:"Share Your Experience With Us!!",
+          Content:<ReviewTabl/>,
+          logo:<ReviewsOutlined/>
+          
+        }
       ];
     } 
   };
@@ -146,7 +156,7 @@ function Account() {
             
           }}
             
-            className='shadow-lg rounded-l border-2 pb-6 ' style={{maxHeight:"230px"}}
+            className='shadow-lg rounded-l border-2 pb-6 ' style={{maxHeight:"230px",height:"150px"}}
             onClick={() => {
               handleToggle(item.id);
             }}

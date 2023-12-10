@@ -20,7 +20,7 @@ function ContextRole({children}) {
 
 });
 const [price,setPrice] =useState(0)
-
+const [reviewFromResponse,setReviewFromResponse] = useState([])
  const getAllHomes = async () => {
   try {
     const response = await getHomeApi();
@@ -34,7 +34,7 @@ const [price,setPrice] =useState(0)
     <>
 
   <RoleProvide.Provider value={{userRole,logine,setLogine,setUserRole}}>
-   <GetHomeContext.Provider value={{getAllHomes,homeData,selectedTab,setSelectedTab,setHomeData,setWishListData,wishListData,checkUser,setCheckUser,price,setPrice}}>{children}</GetHomeContext.Provider>
+   <GetHomeContext.Provider value={{getAllHomes,homeData,selectedTab,setSelectedTab,setHomeData,setWishListData,wishListData,checkUser,setCheckUser,price,setPrice,reviewFromResponse,setReviewFromResponse}}>{children}</GetHomeContext.Provider>
     </RoleProvide.Provider>
     </>
   )
