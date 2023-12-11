@@ -117,4 +117,7 @@ export const reviewHomes = async(body,header)=>{
 export const getReviewsApi = async (header)=>{
   return await commonApi("GET",`${base_url}/user/review`,"",header)
 }
-
+// to filter reviews 
+export const filterReviewsAPi = async(id,header)=>{
+  return await commonApi("GET",`${base_url}/product/review/${id}`,"",header)
+}

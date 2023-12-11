@@ -19,3 +19,10 @@
     scrollbar-width: none; /* Firefox */
   }
 }
+
+:root {
+  --swiper-navigation-size: 20px; /* Set the desired size */
+  --swiper-navigation-color: #000000;
+  --swiper-navigation-sides-offset: 20px
+  /* Set the desired color */
+}

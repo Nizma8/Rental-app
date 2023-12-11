@@ -13,6 +13,7 @@ import { styled } from "@mui/material/styles";
 import RatingComponent from "./RatingComponent";
 import Box from "@mui/material/Box";
 import { GetHomeContext } from "../ContextShare/ContextRole";
+import { Edit } from "@mui/icons-material";
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
@@ -38,7 +39,6 @@ function Tabl() {
     date: "",
     Suggestions: "",
   });
-  console.log(userInput);
   const [rating, setRating] = useState(0);
   const [selectedHomes, setSelectedHomes] = useState(null);
 
@@ -72,14 +72,13 @@ function Tabl() {
         setDataFromResponse(response.data);
        
       } else {
-        console.error("Error fetching user booked homes:", response.data);
+        // console.error("Error fetching user booked homes:", response.data);
       }
     } catch (error) {
       console.error("Error fetching user booked homes:", error.message);
-      console.log(console.error(error));
+      // console.log(console.error(error));
     }
   };
-  console.log(dataFromResponse);
   // user review
   const userReview = async () => {
     const { title, Description, date, Suggestions } = userInput;
@@ -102,9 +101,9 @@ function Tabl() {
       handleClose()
     }
     console.log(response);
+
   };
 
-  console.log(selectedHomes);
   useEffect(() => {
     userBookedHomes();
   }, []);
@@ -126,7 +125,7 @@ function Tabl() {
             <th className="pr-10 pl-10 py-4">No</th>
             <th className="pr-10 py-4">Homes</th>
             <th className="pr-10 py-4">Price</th>
-            <th className="pr-30 py-4">Actions</th>
+            <th className="pr-30 py-4">Reviews</th>
           </tr>
         </thead>
         <tbody>
@@ -140,13 +139,13 @@ function Tabl() {
                 </td>
                 <td className="pr-30 py-4 text-sm">
                   <button
-                    className="bg-customPink shadow-lg rounded-sm text-white"
+                    className="bg-customPink shadow-lg rounded-sm text-white text-small"
                     onClick={() => {
                       setOpen(true);
                       setSelectedHomes(home);
                     }}
                   >
-                    {home.review ? "Edit Review" : "Add Review"}
+                    {home.review ? <Edit/> : "Add Review"}
                   </button>
                 </td>
               </tr>

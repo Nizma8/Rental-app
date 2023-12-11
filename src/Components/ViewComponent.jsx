@@ -5,6 +5,8 @@ import { base_url } from "../Service/baseUrl";
 import { GetHomeContext, RoleProvide } from "../ContextShare/ContextRole";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ReviewCard from "./ReviewCard";
+import Moving from "./Moving";
 function ViewComponent() {
     const[view,setview]=useState({})
   const {setCheckUser,checkUser} = useContext(GetHomeContext)
@@ -59,7 +61,6 @@ const homeView =async()=>{
     // Await hostView before logging
     const fetchData = async () => {
       await hostView();
-      console.log(hostsView);
     };
     fetchData();
   }, [view]);
@@ -69,14 +70,14 @@ const homeView =async()=>{
         <div className="md:h-full">
           <img
             className="object-cover object-center w-full h-full border border-grey-500"
-            src={`${base_url}/uploads/${view.productImage}`}
+            src={`${base_url}/uploads/${view?.productImage}`}
             alt=""
           />
         </div>
         <div className="p-6">
-          <h2 className="text-xl font-semibold mb-2">{view.name},<span className="ml-2">{view.location}</span></h2>
+          <h2 className="text-xl font-semibold mb-2">{view?.name},<span className="ml-2">{view?.location}</span></h2>
           {/* <p className="text-gray-600 mb-2"></p> */}
-          <p className="text-gray-700 mb-4">{view.type}</p>
+          <p className="text-gray-700 mb-4">{view?.type}</p>
 
           <div className="flex items-center mb-4">
             <span className="mr-2">Amenities:</span>
@@ -125,7 +126,7 @@ const homeView =async()=>{
           </div>
 
           <div className="flex items-center justify-between">
-            <p className="text-gray-800 bg-white shadow-md py-3 px-4 cursor-pointer font-semibold">{`Price per Night:${view.price}`}</p>
+            <p className="text-gray-800 bg-white shadow-md py-3 px-4 cursor-pointer font-semibold">{`Price per Night:${view?.price}`}</p>
             <button className="bg-customPink text-white px-4 py-2 rounded" onClick={()=>detailsChecks(view._id)}>
               Checkout
             </button>
@@ -142,6 +143,7 @@ const homeView =async()=>{
 
         
       </div>
+     <Moving productId ={params.id}/>
       <ToastContainer
 position="bottom-right"
 autoClose={5000}

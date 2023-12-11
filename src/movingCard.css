@@ -1,0 +1,42 @@
+.moving-cards-container {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+  }
+  
+  .moving-card {
+    width: 300px; /* Adjust the width as needed */
+    margin-right: 16px; /* Adjust the margin as needed */
+    animation: moveCard 5s linear infinite;
+  }
+  
+  .card-content {
+    padding: 16px;
+  }
+  
+  .row {
+    display: flex;
+  }
+  
+  .col-1 {
+    flex: 0 0 30%;
+  }
+  
+  .col-2 {
+    flex: 0 0 70%;
+    padding-left: 16px;
+  }
+  
+  .small-photo {
+    width: 100%;
+    height: auto;
+  }
+  
+  @keyframes moveCard {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
