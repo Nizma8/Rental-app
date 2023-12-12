@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {  editHomesApi, getUserHostedHomesApi, viewProductApi} from '../Service/commonApi'
 import { CardContent ,Card, CardActionArea} from '@mui/material'
 import { base_url } from '../Service/baseUrl'
@@ -21,6 +21,8 @@ import Select from "@mui/material/Select";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import ListItemText from "@mui/material/ListItemText";
 import { TextField } from "@mui/material";
+import { BiEdit, BiTrash } from 'react-icons/bi'
+import { GetHomeContext } from '../ContextShare/ContextRole'
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
@@ -46,6 +48,8 @@ function HostDetails() {
     const [oneData,setOneData] = useState({})
     const [open, setOpen] = React.useState(false);
     const [selectedAmenities, setSelectedAmenities] = useState([]);
+    const { homeData,setHomeData
+    } = useContext(GetHomeContext)
 const [preview,setPreview] = useState("")
 
     const navigate = useNavigate()
@@ -106,17 +110,21 @@ try{
   }
 
   const result = await editHomesApi(reqBody,reqHeader);
-
+console.log(result);
   if (result.status === 200) {
+    
+    setHomeData(result.data)
+    alert("Successfully edited!!")
+    getUserHostedHomes()
     handleClose();
-    console.log(result);
+    
+
   } }
+  
   catch(error){
     console.log(error);
   }
 }
-  console.log(oneData._id);
-console.log(oneData);
     useEffect(()=>{
         getUserHostedHomes()
     },[])
@@ -130,11 +138,16 @@ console.log(oneData);
               <div className='flex items-center justify-center'>
                 <div>
                   <img src={`${base_url}/uploads/${item.productImage}`} alt="" className='h-3/4 object-cover' style={{ maxHeight: "50px" }} onClick={() => { viewProduct(item._id) }} />
-                  <h6 className='font-bold' style={{ fontSize: '12px' }}>{item.name}</h6>
+                 <div className='flex justify-between items-center'> <h6 className='font-bold' style={{ fontSize: '12px' }}>{item.name}</h6>
                 </div>
-                <ModeIcon className='text-small text-customPink'
+                </div>
+               
+              </div>
+              <div className=' flex items-center justify-between mt-3'>
+              <BiEdit className=' text-customPink  shadow-lg' 
                  onClick={()=>toGetOneProduct(item._id)}
                  />
+                 <BiTrash className='text-customPink  shadow-lg'/>
               </div>
             </CardContent>
           </Card>

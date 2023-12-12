@@ -14,6 +14,7 @@ import RatingComponent from "./RatingComponent";
 import Box from "@mui/material/Box";
 import { GetHomeContext } from "../ContextShare/ContextRole";
 import { Edit } from "@mui/icons-material";
+import { BiEdit, BiPlus, BiTrash } from "react-icons/bi";
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
@@ -31,7 +32,8 @@ const theme = createTheme({
 
 function Tabl() {
   const [dataFromResponse, setDataFromResponse] = useState([]);
-  const { reviewFromResponse } =useContext(GetHomeContext)
+  const { homeData,setHomeData
+  } =useContext(GetHomeContext)
   const [open, setOpen] = useState(false);
   const [userInput, setUserInput] = useState({
     title: "",
@@ -54,7 +56,7 @@ function Tabl() {
     });
   };
 // to check if its alredy wishlisted
- 
+ // edit homes
  
   const handleRatingChange = (newRating) => {
     setRating(newRating);
@@ -103,10 +105,6 @@ function Tabl() {
     console.log(response);
 
   };
-
-  useEffect(() => {
-    userBookedHomes();
-  }, []);
   const calculateTotalPrice = (home) => {
     const checkinDate = new Date(home.checkIn);
     const checkoutDate = new Date(home.checkOut);
@@ -116,6 +114,27 @@ function Tabl() {
       duration * home.productId.price * parseInt(home.guests, 10);
     return `$${totalPrice.toFixed(2)}`;
   };
+
+  // handledit eachreview
+  const handleEditClick = (home) => {
+    setOpen(true);
+    setSelectedHomes(home);
+  console.log(home);
+    // Pre-fill the review details in the modal
+    setRating(home.review.rating || 0);
+    setUserInput({
+      title: home.review.title || "",
+      Description: home.review.description || "",
+      date: "", // Set as needed
+      Suggestions: home.review.suggestion || "",
+    });
+    console.log(rating );
+  };
+console.log(selectedHomes);
+  useEffect(() => {
+    userBookedHomes();
+  }, []);
+ 
 
   return (
     <>
@@ -138,15 +157,13 @@ function Tabl() {
                   {calculateTotalPrice(home)}
                 </td>
                 <td className="pr-30 py-4 text-sm">
-                  <button
-                    className="bg-customPink shadow-lg rounded-sm text-white text-small"
-                    onClick={() => {
-                      setOpen(true);
-                      setSelectedHomes(home);
-                    }}
-                  >
-                    {home.review ? <Edit/> : "Add Review"}
-                  </button>
+                
+                    {home.review ?<p className="inline-flex italic text-red-600">reviewed</p>: <button   className="bg-customPink shadow-lg rounded-sm text-white text-lg "
+                   onClick={() => {
+                     setOpen(true);
+                     setSelectedHomes(home);
+                   }}><BiPlus/></button>}
+                 
                 </td>
               </tr>
             ))
