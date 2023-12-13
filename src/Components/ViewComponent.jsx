@@ -66,7 +66,7 @@ const homeView =async()=>{
   }, [view]);
   return (
     <>
-      <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 bg-white rounded-xl overflow-hidden pt-28 shadow-md">
+      <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 bg-white rounded-xl overflow-hidden pt-28 shadow-md mb-10">
         <div className="md:h-full">
           <img
             className="object-cover object-center w-full h-full border border-grey-500"

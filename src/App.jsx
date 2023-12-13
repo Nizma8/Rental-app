@@ -8,6 +8,7 @@ import ViewComponent from "./Components/ViewComponent"
 import WishList from "./Pages/WishList"
 import Account from "./Pages/Account"
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import Footer from "./Components/Footer"
 function App() {
   const initialOptions = {
     clientId: "AUs3uUtAVrOKUID64niKJbeMFyVjqNIfesuvCkyjnrVfHAAVUp-3Rp2BfuVEoKUncIYXVTdCVi3YHn7H",
@@ -29,6 +30,7 @@ function App() {
   <Route path="/property/wishlist" element={<WishList/>}/>
   <Route path="/account" element={<Account/>}/>
   </Routes>
+  <Footer/>
 </PayPalScriptProvider >
 
 

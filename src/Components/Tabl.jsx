@@ -116,20 +116,7 @@ function Tabl() {
   };
 
   // handledit eachreview
-  const handleEditClick = (home) => {
-    setOpen(true);
-    setSelectedHomes(home);
-  console.log(home);
-    // Pre-fill the review details in the modal
-    setRating(home.review.rating || 0);
-    setUserInput({
-      title: home.review.title || "",
-      Description: home.review.description || "",
-      date: "", // Set as needed
-      Suggestions: home.review.suggestion || "",
-    });
-    console.log(rating );
-  };
+  
 console.log(selectedHomes);
   useEffect(() => {
     userBookedHomes();

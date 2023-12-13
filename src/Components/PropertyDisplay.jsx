@@ -19,13 +19,17 @@ function PropertyDisplay() {
   // console.log(filteredData)
   const navigate = useNavigate();
   const handleNavigate = (id) => {
-    navigate(`/property/${id}`);
+    if(userRole=="user" || userRole=="admin"  )
+    {navigate(`/property/${id}`);}
+    else{
+      toast.warning("Please Switch to Travelling!!")
+    }
   };
   const filteresList = homeData?.filter(item=>item.chooseType===selectedTab)
   // console.log(filteresList);
   const handleWishlist = async (productId)=>{
     if(sessionStorage.getItem("token")){
-      const reqBody = { productId };
+      if(userRole == "user"){ const reqBody = { productId };
       const reqHeader = {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       };
@@ -35,7 +39,11 @@ function PropertyDisplay() {
         // console.log(response);
       } else {
         toast.warning(response.response.data.message);
+      }}else{
+        toast.warning("Please Switch to Travelling!!")
+
       }
+     
     }
    else{
     toast.error("please login!!")

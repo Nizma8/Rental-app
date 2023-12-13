@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {  editHomesApi, getUserHostedHomesApi, viewProductApi} from '../Service/commonApi'
+import {  editHomesApi, getUserHostedHomesApi, removeHomeApi, viewProductApi} from '../Service/commonApi'
 import { CardContent ,Card, CardActionArea} from '@mui/material'
 import { base_url } from '../Service/baseUrl'
 import { useNavigate } from 'react-router-dom'
@@ -48,7 +48,7 @@ function HostDetails() {
     const [oneData,setOneData] = useState({})
     const [open, setOpen] = React.useState(false);
     const [selectedAmenities, setSelectedAmenities] = useState([]);
-    const { homeData,setHomeData
+    const {setHomeData,getAllHomes
     } = useContext(GetHomeContext)
 const [preview,setPreview] = useState("")
 
@@ -125,6 +125,13 @@ console.log(result);
     console.log(error);
   }
 }
+// remove products
+const removeHome = async(id)=>{
+  const reqHeader ={
+    Authorization: `Bearer ${sessionStorage.getItem("token")}`,}
+   await removeHomeApi(id,reqHeader)
+    getUserHostedHomes()
+}
     useEffect(()=>{
         getUserHostedHomes()
     },[])
@@ -138,8 +145,8 @@ console.log(result);
               <div className='flex items-center justify-center'>
                 <div>
                   <img src={`${base_url}/uploads/${item.productImage}`} alt="" className='h-3/4 object-cover' style={{ maxHeight: "50px" }} onClick={() => { viewProduct(item._id) }} />
-                 <div className='flex justify-between items-center'> <h6 className='font-bold' style={{ fontSize: '12px' }}>{item.name}</h6>
-                </div>
+                <h6 className='font-bold h-8' style={{ fontSize: '12px' }}>{item.name}</h6>
+                
                 </div>
                
               </div>
@@ -147,7 +154,10 @@ console.log(result);
               <BiEdit className=' text-customPink  shadow-lg' 
                  onClick={()=>toGetOneProduct(item._id)}
                  />
-                 <BiTrash className='text-customPink  shadow-lg'/>
+                 <BiTrash className='text-customPink  shadow-lg'
+                    onClick={()=>removeHome(item._id)}
+
+                 />
               </div>
             </CardContent>
           </Card>
@@ -190,6 +200,7 @@ console.log(result);
                    src={preview?preview:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi2_0STiAZyZmqwMSyxAGQji_kToI47_EVjg&usqp=CAU"}
                    alt=""
                    height={"100px"}
+                   className=' max-h-[90%]'
                  />
                </label>
    

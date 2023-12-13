@@ -18,11 +18,13 @@ import Box from "@mui/material/Box";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import PayPalPayemnt from "../Components/PayPalPayemnt";
+import ProfileComponent from "../Components/ProfileComponent";
 
 function CheckoutPage() {
   const { checkUser, setCheckUser,setPrice } = useContext(GetHomeContext);
+  const[showProfile,setShowProfile] = useState(false)
   const [checkOutDetails, setCheckOutDetails] = useState([]);
-  const [showButton,SetShowButton] = useState(false)
+  const [showButton, setShowButton] = useState(false);
   const [nightsStayed, setNightsStayed] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [open, setOpen] = useState(false);
@@ -93,28 +95,26 @@ function CheckoutPage() {
     }
   };
   const handleRedirect = () => {
-    navigate("/");
+    handleClose()
+    setShowButton(true)
+
+
   };
   const handleBookingRequest = async () => {
-    console.log("button clicked");
-    SetShowButton(true)
+    
 
     const reqBody = {
       id: checkOutDetails._id,
     };
 
-    const response = await requestBookingApi(reqBody);
-    if (response.status === 200) {
-      setCheckUser({
-        checkinDate: "",
-        checkoutDate: "",
-        guests: 1,
-      });
-    }
-    // handleOpen();
-    console.log(response);
+   await requestBookingApi(reqBody);
+    
     // If booking is successful, setBookingSuccess(true);
   };
+  const handleBookingRequests= async()=>{
+    handleOpen();
+
+  }
   
   // to get no of night spend
   const getNightsStayed = () => {
@@ -260,12 +260,13 @@ function CheckoutPage() {
 
            <button
               className="bg-customPink text-white py-2 px-2 rounded-md shadow-lg ml-4 mt-5 mb-6 "
-              onClick={handleBookingRequest}
+              onClick={handleBookingRequests}
             >
               Request To Book
             </button>
+
           {
-            showButton && <PayPalPayemnt name={checkOutDetails?.productId?.name} price ={totalPrice}/>
+            showButton && <PayPalPayemnt name={checkOutDetails?.productId?.name} price ={totalPrice} handleBookingRequest={handleBookingRequest}/>
           }
           </div>
 
@@ -347,22 +348,13 @@ function CheckoutPage() {
             p: 4,
           }}
         >
-          <Typography
-            id="booking-confirmation-modal"
-            variant="h6"
-            component="h2"
-          >
-            <CheckCircleOutlineIcon className=" text-green-500 me-2" />
-            Booking Confirmed!
-          </Typography>
-          <Typography id="booking-confirmation-description" sx={{ mt: 2 }}>
-            Your booking has been confirmed. Thank you!
-          </Typography>
+          <ProfileComponent/>
+         
           <Button
             onClick={handleRedirect}
             sx={{ mt: 2, backgroundColor: "#DE3163" }}
           >
-            OK
+            Confirm 
           </Button>
         </Box>
       </Modal>

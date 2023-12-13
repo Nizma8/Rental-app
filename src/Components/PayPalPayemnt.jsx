@@ -1,10 +1,15 @@
 import { PayPalButtons } from '@paypal/react-paypal-js';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { base_url } from '../Service/baseUrl';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from 'react-router-dom';
+import { GetHomeContext } from '../ContextShare/ContextRole';
 
-
-function PayPalPayemnt({name,price}) {
+function PayPalPayemnt({name,price,handleBookingRequest}) {
     const [success,setSuccess] = useState(false)
+    const {checkUser,setCheckUser}= useContext(GetHomeContext)
+    const navigate = useNavigate()
 console.log(price);
     const createOrder = async (data) => {
         try {
@@ -56,7 +61,14 @@ console.log(price);
     
       useEffect(() => {
         if (success) {
-          alert('Transaction Successful!!!');
+          toast.success('Transaction Successful!!!');
+          handleBookingRequest()
+          setCheckUser({
+            checkinDate: "",
+            checkoutDate: "",
+            guests: 1,
+          });
+          navigate('/')
         }
       }, [success]);
     
@@ -66,6 +78,18 @@ console.log(price);
             createOrder={(data, actions) => createOrder(data, actions)}
             onApprove={(data, actions) => onApprove(data, actions)}
           />
+             <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
         </div>
       );
 }

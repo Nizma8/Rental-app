@@ -50,7 +50,7 @@ function WishList() {
 
   // console.log(wishListData);
   return (
-    <div className="pt-28 grid xl:grid-cols-4 gap-2  md:grid-cols-3 md:gap-2   sm:grid-cols-2 mx-10 sm:mx-20">
+    <div className="pt-28 grid xl:grid-cols-4 gap-2  md:grid-cols-3 md:gap-2   sm:grid-cols-2 mx-10 sm:mx-20 mb-36">
       {wishListData?.length > 0
         ? wishListData?.map((item) => {
             return (

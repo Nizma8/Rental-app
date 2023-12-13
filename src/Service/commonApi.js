@@ -126,3 +126,11 @@ export const filterReviewsAPi = async(id,header)=>{
 export const getEachRevieApi = async(id,header)=>{
   return await commonApi("GET",`${base_url}/user/review/${id}`,"",header)
 }
+
+export const EditReviewAPi = async(id,body)=>{
+ return await commonApi('PUT',`${base_url}/reviews/edit/${id}`,body)
+}
+// to subscribe
+export const subsctribe = async(email)=>{
+  return await commonApi('POST',`${base_url}/subscribe`,email)
+}

@@ -147,7 +147,7 @@ function Account() {
 
   return (
    
-      <div className="pt-32 grid xl:grid-cols-3 lg:grid-cols-3 gap-4 ms-5  mr-4 ">
+      <div className="pt-32 grid xl:grid-cols-3 lg:grid-cols-3 gap-4 ms-5  mr-4 mb-10">
       {cards?.map((item, index) => (
         <div key={index}>
           <motion.div
