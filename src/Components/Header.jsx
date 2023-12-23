@@ -243,13 +243,10 @@ function Header({ home }) {
             </div>
           </div>
         </div>
-        <AnimatePresence>
+        
           {menu && (
-            <motion.div className="w-44 flex flex-col items-center justify-center border border-slate-600 py-5 bg-white mt-3 absolute xl:right-52 rounded-lg shadow-lg lg:right-40 md:right-20 sm:right-10 right-5"
-            initial={{ scale: 0.5 }}
-            animate={{ scale: 1.3,marginTop:"28px" }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] }}
+            <div className="w-44 flex flex-col items-center justify-center border border-slate-600 py-5 bg-white mt-3 absolute xl:right-52 rounded-lg shadow-lg lg:right-40 md:right-20 sm:right-10 right-5"
+            
             >
               <ul className="w-full">
                 {!logine
@@ -305,9 +302,8 @@ function Header({ home }) {
                         );
                       })}
               </ul>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
       </div>
       <>
         <ThemeProvider theme={theme}>

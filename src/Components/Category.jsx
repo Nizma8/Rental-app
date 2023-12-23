@@ -68,45 +68,55 @@ function Category() {
   const handleClose = () => {
     setOpen(false);
   };
-const handleAdd =async()=>{
-  const {image,chooseType,amenities,name,location,bedCount,price} =propertyDetails
-  if(!image||!chooseType||!amenities||!name||!location||!bedCount||!price ){
-    toast.error("Please fill the form")
-  }else{
-    const reqBody = new FormData()
-    reqBody.append("productImage",image)
-    reqBody.append("chooseType",chooseType)
-    reqBody.append("amenities",amenities)
-    reqBody.append("name",name)
-    reqBody.append("location",location)
-    reqBody.append("bedCount",bedCount)
-    reqBody.append("price",price)
-   
-    const reqHeader ={
-      "content-type":"multipart/form-data",
-      "Authorization":`Bearer ${sessionStorage.getItem("token")}`
-    }
 
-    const response = await addAllProductsApi(reqBody,reqHeader)
-    if(response.status===200){
-      setPropertyDetails({
-        image: '',
-        chooseType: '',
-        amenities: [],
-        name: '',
-        location: '',
-        bedCount: '',
-        price: '',
-      })
-      handleClose()
-      setHomeData([...homeData,response.data])
-      toast.success(response.data.message)
 
-    } else if(response.status===406){
-      toast.warning("This home already existed..")
+  const handleAdd = async () => {
+    const { image, chooseType, amenities, name, location, bedCount, price } = propertyDetails;
+  
+    if (!image || !chooseType || !amenities || !name || !location || !bedCount || !price) {
+      toast.error("Please fill the form");
+    } else {
+      try {
+        const reqBody = new FormData();
+        reqBody.append("productImage", image);
+        reqBody.append("chooseType", chooseType);
+        reqBody.append("amenities", amenities);
+        reqBody.append("name", name);
+        reqBody.append("location", location);
+        reqBody.append("bedCount", bedCount);
+        reqBody.append("price", price);
+  
+        const reqHeader = {
+          "content-type": "multipart/form-data",
+          "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+        };
+  
+        const response = await addAllProductsApi(reqBody, reqHeader);
+        
+        if (response.status === 200) {
+          setPropertyDetails({
+            image: '',
+            chooseType: '',
+            amenities: [],
+            name: '',
+            location: '',
+            bedCount: '',
+            price: '',
+          });
+  
+          handleClose();
+          setHomeData([...homeData, response.data]);
+          toast.success(response.data.message);
+        }
+         else {
+          toast.error(`${response.response.data.message}`);
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+        toast.error("An unexpected error occurred. Please try again later.");
+      }
     }
-  }
-}
+  };
   const handleChange = (event) => {
     const {
       target: { value },
