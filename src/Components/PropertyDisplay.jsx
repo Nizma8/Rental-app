@@ -19,10 +19,20 @@ function PropertyDisplay() {
   // console.log(filteredData)
   const navigate = useNavigate();
   const handleNavigate = (id) => {
-    if(userRole=="user" || userRole=="admin"  )
-    {navigate(`/property/${id}`);}
-    else{
-      toast.warning("Please Switch to Travelling!!")
+    const token = sessionStorage.getItem("token");
+  
+    if (!token) {
+      toast.warning("Please login!!");
+    } 
+    else {
+  
+      if (userRole == "admin" || userRole == "user") {
+        navigate(`/property/${id}`);
+      } else if (userRole == "host") {
+        toast.warning("Please switch to travelling");
+      } else {
+        toast.warning("Invalid user role");
+      }
     }
   };
   const filteresList = homeData?.filter(item=>item.chooseType===selectedTab)

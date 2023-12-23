@@ -14,11 +14,13 @@ function Moving({productId}) {
 }
     const response = await filterReviewsAPi(Id,reqHeader)
     setDataFromResposne(response.data)
+    console.log(response);
   }
  
   useEffect(()=>{
     filterReview(productId)
   },[productId])
+console.log(dataFromResponse);
   return (
     <div className='my-20 ml-32 w-[90%]'>
     {/* Corrected tag name to <Slider> */}

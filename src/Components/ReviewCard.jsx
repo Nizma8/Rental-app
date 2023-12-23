@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -38,8 +38,7 @@ const style = {
 
 function ReviewCard({data}) {
   const [likeStates, setLikeStates] = useState({});
-  const [openStates, setOpenStates] = useState(Array(data.length).fill(false));  
-  
+  const [openStates, setOpenStates] = useState(Array(data?.length || 0).fill(false));  
   const [dislikeState, setDislikeState] = useState({});
   const handleLikeClick = (id) => {
     setLikeStates((prevStates) => {
@@ -79,6 +78,10 @@ function ReviewCard({data}) {
 
  })
   };
+  useEffect(() => {
+    setOpenStates(Array(data?.length || 0).fill(false));
+  }, [data]);
+  
   return (
   <>
       <Swiper

@@ -19,9 +19,11 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import PayPalPayemnt from "../Components/PayPalPayemnt";
 import ProfileComponent from "../Components/ProfileComponent";
+import Skeleton from '@mui/material/Skeleton';
 
 function CheckoutPage() {
   const { checkUser, setCheckUser,setPrice } = useContext(GetHomeContext);
+  const [loading,setLoading] = useState(false)
   const[showProfile,setShowProfile] = useState(false)
   const [checkOutDetails, setCheckOutDetails] = useState([]);
   const [showButton, setShowButton] = useState(false);
@@ -136,6 +138,7 @@ function CheckoutPage() {
     };
 
     try {
+      setLoading(true)
       const response = await getChecksApi(reqHeader);
       if (response.status === 200) {
         const dataArray = Object.values(response);
@@ -173,8 +176,13 @@ function CheckoutPage() {
       }
     } catch (error) {
       console.error("Error fetching user checks:", error);
+    }finally {
+      setLoading(false);
     }
   };
+  const handleBacktoHome=()=>{
+  navigate('/')
+  }
 
   useEffect(() => {
     getuserCheckOut();
@@ -186,7 +194,7 @@ function CheckoutPage() {
           {/* Column 1: Checkout Details */}
           <div>
             <h1 className="text-2xl font-bold mb-4 cursor-pointer">
-              Back to Home <ArrowForwardTwoTone onClick={handleRedirect} />
+              Back to Home <ArrowForwardTwoTone onClick={handleBacktoHome}/>
             </h1>
 
             {/* Check-in Date */}
@@ -271,63 +279,67 @@ function CheckoutPage() {
           </div>
 
           {/* Column 2: Summary Card */}
-          <Grid item xs={6} md={5} xl={4} lg={2} marginX={"50px"}>
-            <Card className="border border-gray-300">
-              <CardContent>
-                {/* Section 1: Property Details */}
-                <div className="mb-4">
-                  <img
-                    src={`${base_url}/uploads/${checkOutDetails?.productId?.productImage}`}
-                    alt="Property"
-                    className="w-full h-48 object-cover"
-                  />
-                </div>
-                <div className="mb-4 shadow-lg border-grey-500  border py-4 px-2">
-                  <h1 className="text-center font-bold text-xl  ">
-                    your Home Details
-                  </h1>
-                  <div className="flex justify-between">
-                    <h3 className="font-bold ml-5 me-2 text-gray-500 text-lg">
-                      {checkOutDetails?.productId?.name},
-                      {checkOutDetails?.productId?.location}
-                    </h3>
-                    <h3 className="font-bold ml-5 me-2 text-gray-500 text-lg">
-                      No of Guests:{checkUser?.guests}
-                    </h3>
-                  </div>
-                </div>
+          <Grid item xs={12} sm={6} md={5} xl={4} lg={3} marginX="50px">
+      <Card className="border border-gray-300">
+        <CardContent>
+        <div className="mb-4 ">
+        <h1 className="text-center font-bold text-xl mb-2">Property Details</h1>
+      </div>
+          {/* Section 1: Property Details */}
+          <div className="mb-4">
+           {loading? <Skeleton variant="rectangular" width={"100%"} height={192} />: 
+            <img
+              src={`${base_url}/uploads/${checkOutDetails?.productId?.productImage}`}
+              alt="Property"
+              className="w-full h-48 object-cover rounded"
+            />}
+          </div>
 
-                {/* Section 2: Price Details */}
+          <div className="mb-4 shadow-lg border-grey-500 border py-4 px-2">
+            {
+              loading?   <Skeleton variant="rectangular" width={"100%"} height={60} />: <div className="flex justify-between items-center">
+              <h3 className="font-bold text-gray-500 text-lg">
+                {checkOutDetails?.productId?.name}, {checkOutDetails?.productId?.location}
+              </h3>
+              <h3 className="font-bold text-gray-500 text-lg">
+                Guests: {checkUser?.guests}
+              </h3>
+            </div>
+            }
+            {/* <h1 className="text-center font-bold text-xl mb-2">Your Home Details</h1> */}
+           
+          </div>
 
-                {/* Section 3: Total Amount */}
-                <div className="mb-4 shadow-lg border-grey-500  border py-4 px-2">
-                  <h2 className="text-center font-bold text-xl">Total Price</h2>
-                  <div className="flex justify-between">
-                    <h3 className="font-bold ml-5 me-2 text-gray-500 text-lg">
-                      Price per Night:{checkOutDetails?.productId?.price}
-                    </h3>
-                    <h3 className="font-bold ml-5 me-2 text-gray-500 text-lg">
-                      No of Night: {nightsStayed}
-                    </h3>
-                  </div>
-                </div>
-                <div className="mb-4 shadow-lg border-grey-500  border py-4 px-2">
-                  <h2 className="text-center font-bold text-xl">
-                    Price Details
-                  </h2>
-                  <div className="flex justify-between">
-                    <h3 className="font-bold ml-5 me-2 text-gray-500 text-lg">
-                      {checkOutDetails?.productId?.price}*{nightsStayed}*
-                      {checkUser?.guests}
-                    </h3>
-                    <h3 className="font-bold ml-5 me-2 text-gray-500 text-lg">
-                      Total Price:{totalPrice}
-                    </h3>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Grid>
+     
+
+          {/* Section 3: Total Amount */}
+          <div className="mb-4 shadow-lg border-grey-500 border py-4 px-2">
+            {/* <h2 className="text-center font-bold text-xl mb-2">Total Price</h2> */}
+           { loading? <Skeleton variant="rectangular"width={"100%"} height={60} />:  <div className="flex justify-between items-center">
+              <h3 className="font-bold text-gray-500 text-lg">
+                Price per Night: {checkOutDetails?.productId?.price}
+              </h3>
+              <h3 className="font-bold text-gray-500 text-lg">
+                Nights Stayed: {nightsStayed}
+              </h3>
+            </div>}
+          </div>
+
+          <div className="mb-4 shadow-lg border-grey-500 border py-4 px-2">
+            {/* <h2 className="text-center font-bold text-xl mb-2">Price Details</h2> */}
+           { loading? <Skeleton variant="rectangular" width={"100%"} height={60} />: <div className="flex justify-between items-center">
+              <h3 className="font-bold text-gray-500 text-lg">
+                {checkOutDetails?.productId?.price} * {nightsStayed} * {checkUser?.guests}
+              </h3>
+              <h3 className="font-bold text-gray-500 text-lg">
+                Total Price: {totalPrice}
+              </h3>
+            </div>}
+          </div>
+        </CardContent>
+      </Card>
+    </Grid>
+          
         </div>
       </div>
       <Modal

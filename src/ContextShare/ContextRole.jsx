@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react'
-import { getHomeApi, getWishlistApi } from '../Service/commonApi'
+import { getHomeApi } from '../Service/commonApi'
 
 export const RoleProvide = createContext()
 export const GetHomeContext = createContext()
