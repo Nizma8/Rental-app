@@ -139,7 +139,7 @@ console.log(selectedHomes);
             dataFromResponse?.map((home, index) => (
               <tr key={home._id} className=" hover:bg-gray-300 rounded-b-lg">
                 <td className="px-10 py-4 text-sm">{index + 1}</td>
-                <td className="pr-10 py-4 text-sm">{home.productId.name}</td>
+                <td className="pr-10 py-4 text-sm">{home?.productId?.name}</td>
                 <td className="pr-10 py-4 text-sm">
                   {calculateTotalPrice(home)}
                 </td>

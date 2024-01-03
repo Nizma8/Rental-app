@@ -152,13 +152,13 @@ function Header({ home }) {
   //logout
   const Logout = async (item) => {
     if (item === "Logout") {
+      navigate("/");
       setLogine(false);
       setUserRole("user");
       localStorage.removeItem("ExistingUser");
       sessionStorage.removeItem("token");
       handleClose();
       setMenu(!menu);
-      navigate("/");
     } 
     else if (item === "Switch to Hosting") {
       const response = await loginHostApi({
