@@ -1,4 +1,4 @@
-import React, { useContext, useState,useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import TabPanel from "./TabPanel";
 import Button from "@mui/material/Button";
@@ -19,8 +19,8 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import ListItemText from "@mui/material/ListItemText";
 import { TextField } from "@mui/material";
 import { GetHomeContext, RoleProvide } from "../ContextShare/ContextRole";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { addAllProductsApi } from "../Service/commonApi";
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -44,24 +44,26 @@ const names = ["Wifi", "Tv", "Heater", "Air Condition", "Pool"];
 
 function Category() {
   const { userRole } = useContext(RoleProvide);
-  const {setHomeData,homeData}= useContext(GetHomeContext)
+  const { setHomeData, homeData } = useContext(GetHomeContext);
   const [open, setOpen] = React.useState(false);
   const [propertyDetails, setPropertyDetails] = useState({
-    image: '',
-    chooseType: '',
+    image: "",
+    chooseType: "",
     amenities: [],
-    name: '',
-    location: '',
-    bedCount: '',
-    price: '',
+    name: "",
+    location: "",
+    bedCount: "",
+    price: "",
   });
-  const [preview,setPreview] =useState("")
-  useEffect(()=>{
-    if(localStorage.getItem("id") && sessionStorage.getItem("token")){
-      setPropertyDetails({...propertyDetails,userId:JSON.parse(localStorage.getItem("id"))})
-   
+  const [preview, setPreview] = useState("");
+  useEffect(() => {
+    if (localStorage.getItem("id") && sessionStorage.getItem("token")) {
+      setPropertyDetails({
+        ...propertyDetails,
+        userId: JSON.parse(localStorage.getItem("id")),
+      });
     }
-  },[])
+  }, []);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -69,11 +71,19 @@ function Category() {
     setOpen(false);
   };
 
-
   const handleAdd = async () => {
-    const { image, chooseType, amenities, name, location, bedCount, price } = propertyDetails;
-  
-    if (!image || !chooseType || !amenities || !name || !location || !bedCount || !price) {
+    const { image, chooseType, amenities, name, location, bedCount, price } =
+      propertyDetails;
+
+    if (
+      !image ||
+      !chooseType ||
+      !amenities ||
+      !name ||
+      !location ||
+      !bedCount ||
+      !price
+    ) {
       toast.error("Please fill the form");
     } else {
       try {
@@ -85,30 +95,29 @@ function Category() {
         reqBody.append("location", location);
         reqBody.append("bedCount", bedCount);
         reqBody.append("price", price);
-  
+
         const reqHeader = {
           "content-type": "multipart/form-data",
-          "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         };
-  
+
         const response = await addAllProductsApi(reqBody, reqHeader);
-        
+
         if (response.status === 200) {
           setPropertyDetails({
-            image: '',
-            chooseType: '',
+            image: "",
+            chooseType: "",
             amenities: [],
-            name: '',
-            location: '',
-            bedCount: '',
-            price: '',
+            name: "",
+            location: "",
+            bedCount: "",
+            price: "",
           });
-  
+
           handleClose();
           setHomeData([...homeData, response.data]);
           toast.success(response.data.message);
-        }
-         else {
+        } else {
           toast.error(`${response.response.data.message}`);
         }
       } catch (error) {
@@ -123,7 +132,7 @@ function Category() {
     } = event;
     setPropertyDetails((prevDetails) => ({
       ...prevDetails,
-      amenities: typeof value === 'string' ? value.split(',') : value,
+      amenities: typeof value === "string" ? value.split(",") : value,
     }));
   };
   const theme = createTheme({
@@ -145,7 +154,7 @@ function Category() {
             onClick={handleClickOpen}
           >
             <AddCircleOutlineIcon className="text-white " />{" "}
-            <span className="text-white" >Add Property</span>
+            <span className="text-white">Add Property</span>
           </button>
         )}
       </div>
@@ -177,18 +186,25 @@ function Category() {
           </IconButton>
           <DialogContent dividers sx={{ overflowX: "hidden" }}>
             <label className="text-center" htmlFor="projectpic">
-              <input id="projectpic" type="file" style={{ display: "none" }} 
-                onChange={(e)=>{
-            const selectedFile = e.target.files[0]
-            setPropertyDetails({
-              ...propertyDetails,
-              image: selectedFile,
-            })
-            setPreview(URL.createObjectURL(selectedFile))}
-          }
+              <input
+                id="projectpic"
+                type="file"
+                style={{ display: "none" }}
+                onChange={(e) => {
+                  const selectedFile = e.target.files[0];
+                  setPropertyDetails({
+                    ...propertyDetails,
+                    image: selectedFile,
+                  });
+                  setPreview(URL.createObjectURL(selectedFile));
+                }}
               />
               <img
-                src={preview?preview:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi2_0STiAZyZmqwMSyxAGQji_kToI47_EVjg&usqp=CAU"}
+                src={
+                  preview
+                    ? preview
+                    : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi2_0STiAZyZmqwMSyxAGQji_kToI47_EVjg&usqp=CAU"
+                }
                 alt=""
                 height={"100px"}
               />
@@ -197,10 +213,19 @@ function Category() {
             {/* Type */}
             <FormControl sx={{ m: 2, minWidth: 240, maxWidth: 500 }}>
               <InputLabel htmlFor="grouped-select">Choose Type</InputLabel>
-              <Select defaultValue="" id="grouped-select" label="Grouping" value={propertyDetails.chooseType} onChange={(e)=>setPropertyDetails({
-                  ...propertyDetails,chooseType:e.target.value
-                })}>
-                <MenuItem >
+              <Select
+                defaultValue=""
+                id="grouped-select"
+                label="Grouping"
+                value={propertyDetails.chooseType}
+                onChange={(e) =>
+                  setPropertyDetails({
+                    ...propertyDetails,
+                    chooseType: e.target.value,
+                  })
+                }
+              >
+                <MenuItem>
                   <em>None</em>
                 </MenuItem>
                 <MenuItem value="Beach">Beach</MenuItem>
@@ -221,20 +246,22 @@ function Category() {
                 multiple
                 value={propertyDetails.amenities}
                 onChange={handleChange}
-        input={<OutlinedInput label="Tag" />}
-        renderValue={(selected) => selected.join(', ')}
+                input={<OutlinedInput label="Tag" />}
+                renderValue={(selected) => selected.join(", ")}
                 MenuProps={MenuProps}
               >
                 {names.map((name) => (
                   <MenuItem key={name} value={name}>
-                    <Checkbox checked={propertyDetails.amenities.indexOf(name) > -1} />
+                    <Checkbox
+                      checked={propertyDetails.amenities.indexOf(name) > -1}
+                    />
                     <ListItemText primary={name} />
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
             {/* type image */}
-             
+
             {/* property name */}
 
             <TextField
@@ -246,13 +273,13 @@ function Category() {
               type="text"
               fullWidth
               variant="outlined"
-              onChange={e=>{
+              onChange={(e) => {
                 setPropertyDetails({
-                  ...propertyDetails,name:e.target.value
-                })
+                  ...propertyDetails,
+                  name: e.target.value,
+                });
               }}
               value={propertyDetails.name}
-
             />
             {/* location */}
             <TextField
@@ -265,10 +292,11 @@ function Category() {
               fullWidth
               variant="outlined"
               value={propertyDetails.location}
-              onChange={e=>{
+              onChange={(e) => {
                 setPropertyDetails({
-                  ...propertyDetails,location:e.target.value
-                })
+                  ...propertyDetails,
+                  location: e.target.value,
+                });
               }}
             />
             {/* beds */}
@@ -282,10 +310,11 @@ function Category() {
               fullWidth
               variant="outlined"
               value={propertyDetails.bedCount}
-              onChange={e=>{
+              onChange={(e) => {
                 setPropertyDetails({
-                  ...propertyDetails,bedCount:e.target.value
-                })
+                  ...propertyDetails,
+                  bedCount: e.target.value,
+                });
               }}
             />
             {/* Price */}
@@ -299,10 +328,11 @@ function Category() {
               fullWidth
               variant="outlined"
               value={propertyDetails.price}
-              onChange={e=>{
+              onChange={(e) => {
                 setPropertyDetails({
-                  ...propertyDetails,price:e.target.value
-                })
+                  ...propertyDetails,
+                  price: e.target.value,
+                });
               }}
             />
           </DialogContent>
@@ -316,17 +346,19 @@ function Category() {
           </DialogActions>
         </BootstrapDialog>
       </ThemeProvider>
+
       <ToastContainer
         position="bottom-right"
-autoClose={5000}
-hideProgressBar={false}
-newestOnTop={false}
-closeOnClick
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="light"/>
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </>
   );
 }

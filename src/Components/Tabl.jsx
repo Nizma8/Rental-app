@@ -15,6 +15,8 @@ import Box from "@mui/material/Box";
 import { GetHomeContext } from "../ContextShare/ContextRole";
 import { Edit } from "@mui/icons-material";
 import { BiEdit, BiPlus, BiTrash } from "react-icons/bi";
+import { base_url } from "../Service/baseUrl";
+
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
@@ -43,6 +45,12 @@ function Tabl() {
   });
   const [rating, setRating] = useState(0);
   const [selectedHomes, setSelectedHomes] = useState(null);
+  const [opens,setOpens] = useState(false)
+ 
+
+  const handleClickClose = ()=>{
+    setOpens(false)
+  }
 
   const handleClose = () => {
     
@@ -57,7 +65,12 @@ function Tabl() {
   };
 // to check if its alredy wishlisted
  // edit homes
- 
+ // 
+ const handleOpen = ()=>{
+  setOpens(true)
+   // api call to get data
+   console.log(dataFromResponse);
+ }
   const handleRatingChange = (newRating) => {
     setRating(newRating);
   };
@@ -102,7 +115,7 @@ function Tabl() {
     if(response.status === 200){
       handleClose()
     }
-    console.log(response);
+    // console.log(response);
 
   };
   const calculateTotalPrice = (home) => {
@@ -134,10 +147,10 @@ console.log(selectedHomes);
             <th className="pr-30 py-4">Reviews</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody >
           {dataFromResponse?.length > 0 ? (
             dataFromResponse?.map((home, index) => (
-              <tr key={home._id} className=" hover:bg-gray-300 rounded-b-lg">
+              <tr key={home._id} className=" hover:bg-gray-300 rounded-b-lg" onClick={handleOpen}>
                 <td className="px-10 py-4 text-sm">{index + 1}</td>
                 <td className="pr-10 py-4 text-sm">{home?.productId?.name}</td>
                 <td className="pr-10 py-4 text-sm">
@@ -274,6 +287,26 @@ console.log(selectedHomes);
           </DialogActions>
         </BootstrapDialog>
       </ThemeProvider>
+
+      <Dialog onClose={handleClickClose} open={opens}>
+      <DialogTitle>Booking details</DialogTitle>
+    
+       {
+        dataFromResponse.length>0?dataFromResponse.map((item,index)=>{
+          return (
+              <>
+                <h2>CheckIn date : {item.checkIn}</h2>
+                <h2>CkeckOut Date:{item.checkOut}</h2>
+                <h2>no of guests :{item.guests}</h2>
+                <h2>Name :{item?.productId.name}</h2>
+                <h2>Price Per night :{item?.productId?.price}</h2>
+                <img src={item?.productId?.productImage?`${base_url}/uploads/${item?.productId.productImage}`:"https://as1.ftcdn.net/v2/jpg/06/56/50/82/1000_F_656508260_l1UtvG9rKQYp2QM0wXD1pRv8Tqu1peB6.jpg"} alt="" width={"50px"} height={"50px"} className=" rounded-full me-2"/>
+              </>
+          )
+        }):""
+       }
+     
+    </Dialog>
     </>
   );
 }
